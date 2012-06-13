@@ -10,3 +10,9 @@
 *.lai
 *.la
 *.a
+
+# Other c files
+*.out
+
+# OS X files
+.DS_Store
