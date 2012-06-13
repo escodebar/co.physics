@@ -21,12 +21,15 @@ int root_bisection(double (*f)(double), double interval[], double precision, dou
 		- result: the pointer to the double where the result will be stored		
 	*/	
 	
-	/*  define the variables needed:
-		- start: 		value of the function at the start of the interval
-		- end: 			value of the function at the end of the interval
+	/*  the variables used:
+		- steps:		the amount of steps we'll have to perform
+		- i:			the "index" for the iteration
+		- start: 		the start of the interval
 		- center: 		the center of the interval
+		- end: 			the end of the interval
+		- startval: 	value of the function at the start of the interval
 		- centerval: 	value of the function at the center of the interval
-		- newinterval: 	the new interval which will be passed to the recursion
+		- endval:		value of the function at the end of the interval
 	*/
 	
 	// the steps and the index
@@ -37,18 +40,16 @@ int root_bisection(double (*f)(double), double interval[], double precision, dou
 	
 	// the start of the interval, the center of the interval, the end of the interval
 	double start, center, end;
-	
 	start = interval[0];
-	center = (interval[0] + interval[1]) / 2;
 	end = interval[1];
 	
 	// the values at the start, the center and the end of the interval
 	double startval, centerval, endval;
-	
 	startval = f(start);
-	centerval = f(center);
 	endval = f(end);
 	
+	// let's check if we're able to find a root inside the interval
+	// (or if it's already at the start or the end)
 	if (startval * endval >= 0) {
 		if (startval == 0) {
 			*result = start;
@@ -67,7 +68,13 @@ int root_bisection(double (*f)(double), double interval[], double precision, dou
 		center = (start + end) / 2;
 		centerval = f(center);
 		
-		if ((startval < 0) && (endval > 0)) {
+		// if the value at the center is already 0
+		if (centerval == 0) {
+			i = steps;
+			break;
+		}
+		
+		if (startval < 0) {
 			if (centerval > 0) {
 				end = center;
 				endval = centerval;
