@@ -1,8 +1,8 @@
 #include <math.h>
+#include <stdio.h>
 
-// the defined function:
-// exp(-x) - x
-double fun(double);
+// the mathematical function
+double fun(double x);
 double fun(double x) {
 	return exp(-x) - x;
 }
@@ -10,8 +10,8 @@ double fun(double x) {
 
 // takes a function, an intervall, a precision,
 // and finds one root inside the given interval for the given precision
-int root_bisection(double (*f)(double), double interval[], double precision, double *result);
-int root_bisection(double (*f)(double), double interval[], double precision, double *result) {
+int root_bisection(double (*f)(double), double start, double end, double precision, double *result);
+int root_bisection(double (*f)(double), double start, double end, double precision, double *result) {
 	
 	/* 
 		USE: You have to call root_bisection with the following parameters:
@@ -36,12 +36,10 @@ int root_bisection(double (*f)(double), double interval[], double precision, dou
 	int steps, i;
 
 	// the amount of steps (with formula N = log2((b-a)/e))
-	steps = ceil(log2((interval[1]-interval[0])/precision));
+	steps = ceil(log2((start-end)/precision));
 	
-	// the start of the interval, the center of the interval, the end of the interval
-	double start, center, end;
-	start = interval[0];
-	end = interval[1];
+	// the center of the interval
+	double center;
 	
 	// the values at the start, the center and the end of the interval
 	double startval, centerval, endval;
@@ -50,15 +48,9 @@ int root_bisection(double (*f)(double), double interval[], double precision, dou
 	
 	// let's check if we're able to find a root inside the interval
 	// (or if it's already at the start or the end)
-	if (startval * endval >= 0) {
-		if (startval == 0) {
-			*result = start;
-		} else if (endval == 0) {
-			*result = end;
-		} else {
-			// no results if both values are positive or negative
-			return 0;
-		}
+	if (startval * endval > 0) {
+		// no results if both values are positive or negative
+		return 0;
 	}
 	
 	// now let's rock!
@@ -68,7 +60,7 @@ int root_bisection(double (*f)(double), double interval[], double precision, dou
 		center = (start + end) / 2;
 		centerval = f(center);
 		
-		// if the value at the center is already 0
+		// check if the value at the center is already 0
 		if (centerval == 0) {
 			i = steps;
 			break;
@@ -77,7 +69,7 @@ int root_bisection(double (*f)(double), double interval[], double precision, dou
 		if (startval < 0) {
 			if (centerval > 0) {
 				end = center;
-				endval = centerval;
+				endval = centerval; // not really necessary
 			} else {
 				start = center;
 				startval = centerval;
@@ -88,7 +80,7 @@ int root_bisection(double (*f)(double), double interval[], double precision, dou
 				startval = centerval;
 			} else {
 				end = center;
-				endval = centerval;
+				endval = centerval; // not really necessary
 			}
 		}
 	}
@@ -101,10 +93,13 @@ int root_bisection(double (*f)(double), double interval[], double precision, dou
 
 int main ()
 {
-	double res, interval[] = {0,1};
+	double res, start = 0, end = 1;
 	
-	root_bisection(*fun, interval, pow(10,-8), &res);	
-	printf("%f", res);
+	if (root_bisection(&fun, start, end, 10e-8, &res)) {
+		printf("A root was found at x = %f\n", res);
+	} else {
+		printf("No root was found\n");
+	}
 		
 	return 0;
 }

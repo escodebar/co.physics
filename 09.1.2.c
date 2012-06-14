@@ -1,46 +1,47 @@
 #include <math.h>
+#include <stdio.h>
 
-// the defined function:
-// exp(-x) - x
-double fun(double);
+// the function:
+double fun(double x);
 double fun(double x) {
-	return exp(-x) - x;
+	return pow(x, 8);
 }
 
-// the derivation of the defined function:
-// -exp(-x) - 1
-double funder(double);
+// the derivation of the function:
+double funder(double x);
 double funder(double x) {
-	return -exp(-x) - 1;
+	return 8*pow(x,7);
 }
 
 
-// takes a function, an intervall, a precision,
+// takes a function, the derivation of the function, an intervall, a precision,
 // and finds one root inside the given interval for the given precision
-int root_newton_raphson(double, double, double*);
-int root_newton_raphson(double start, double precision, double *result) {
+int root_newton_raphson(double (*f)(double), double (*fder)(double), double start, double precision, double *result);
+int root_newton_raphson(double (*f)(double), double (*fder)(double), double start, double precision, double *result) {
 	
-	double x, funval, funderval;
 	int i = 0;
+	double x1, x1_old, x2, funval, funderval;
 	
-	// TODO
-	// - stop it at the right time
+	x1 = start;
+	x3 = start;
 	
-	while (i < 100) {
-	
-		funval = fun(x);
-		funderval = funder(x);
+ 	do {
+		x1_old = x1;
+		
+		funval = f(x1);
+		funderval = fder(x1);
 		
 		if (funderval != 0) {
-			x = x - funval / funderval;
-		} else {
-			i = 100;
+			x2 = x1 - funval / funderval;
 		}
 		
+		x1 = x2;
+		
 		i++;
-	}
-	
-	*result = x;
+		
+	} while ((fabs(x1_old - x2) / 2.0 > precision) & (i < 1000));
+		
+	*result = x2;
 	
 	return 1;
 }
@@ -51,9 +52,9 @@ int main ()
 	double start, precision, result;
 	
 	start = 1;
-	precision = pow(10,-8);
+	precision = 10e-8;
 	
-	root_newton_raphson(start, precision, &result);
+	root_newton_raphson(&fun, &funder, start, precision, &result);
 	printf("%f", result);
 	
 	return 0;
