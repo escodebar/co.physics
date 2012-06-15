@@ -5,7 +5,6 @@ double fun(double x) {
 	return 1/sqrt(2.0*M_PI) * exp(-x*x/2.0);
 }
 
-double simpsons_integration(double (*fun)(double), double precision, double start, double end);
 double simpsons_integration(double (*fun)(double), double precision, double start, double end) {
 	
 	// the index for the for loop, the amount of steps

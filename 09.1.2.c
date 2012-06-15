@@ -2,13 +2,11 @@
 #include <stdio.h>
 
 // the function:
-double fun(double x);
 double fun(double x) {
 	return pow(x, 8);
 }
 
 // the derivation of the function:
-double funder(double x);
 double funder(double x) {
 	return 8*pow(x,7);
 }
@@ -16,7 +14,6 @@ double funder(double x) {
 
 // takes a function, the derivation of the function, an intervall, a precision,
 // and finds one root inside the given interval for the given precision
-int root_newton_raphson(double (*f)(double), double (*fder)(double), double start, double precision, double *result);
 int root_newton_raphson(double (*f)(double), double (*fder)(double), double start, double precision, double *result) {
 	
 	int i = 0;

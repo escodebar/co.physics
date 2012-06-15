@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 // the mathematical function
-double fun(double x);
 double fun(double x) {
 	return exp(-x) - x;
 }
@@ -10,7 +9,6 @@ double fun(double x) {
 
 // takes a function, an intervall, a precision,
 // and finds one root inside the given interval for the given precision
-int root_bisection(double (*f)(double), double start, double end, double precision, double *result);
 int root_bisection(double (*f)(double), double start, double end, double precision, double *result) {
 	
 	/* 
