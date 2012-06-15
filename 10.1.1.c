@@ -1,6 +1,5 @@
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 double fun(double x) {
 	return 1/sqrt(2.0*M_PI) * exp(-x*x/2.0);
