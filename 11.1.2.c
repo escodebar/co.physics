@@ -5,7 +5,7 @@ double diffeq(double x, double y) {
 	return - x*x * y*y;
 }
 
-int diff_eq_euler(double (*fun)(double, double), double startval, double start, double end, double stepsize) {
+int diff_runge_kutta(double (*fun)(double, double), double startval, double start, double end, double stepsize) {
 	
 	double x, y, k1, k2;
 	
@@ -39,7 +39,7 @@ int main() {
 	
 	int result;
 	
-	result = diff_eq_euler(&diffeq, 1, 0, 1, 0.01);
+	result = diff_runge_kutta(&diffeq, 1, 0, 1, 0.01);
 	
 	return 1;
 }
