@@ -12,13 +12,14 @@ double simpsons_integration(double (*fun)(double), double precision, double star
 	int i, steps;
 	
 	// the stepwidth, the length of the interval, the value of the integral, the value of the old integral
-	double stepwidth, intervallength, j, j_old;
+	double stepwidth, intervallength, j0, j, j_old;
 	
 	// the length of the interval is 
 	intervallength = fabs(end - start);
 	
 	// the start and the end value of the integral
-	j = fun(start) + fun(end);
+	j0 = fun(start) + fun(end);
+	j = j0;
 	
 	// first we'll only calculate one step
 	steps = 1;
@@ -26,6 +27,9 @@ double simpsons_integration(double (*fun)(double), double precision, double star
 	do {
 		// we need to store the old value of the integral
 		j_old = j;
+		
+		// and reset the value of the integral
+		j = j0;
 		
 		// increment the amount of steps for the next iteration
 		steps *= 2;
@@ -37,23 +41,15 @@ double simpsons_integration(double (*fun)(double), double precision, double star
 		// we use the formula f_0 + 4f_1 + 2f_2 + 4f_3 + ... + 2f_(2k-2) + 4f_(2k-1) + f_(2k)
 		// for more information visit:
 		// http://www.physik.unibe.ch/unibe/philnat/fachbphysik/content/e4897/e4910/e4913/e5244/e8465/files60510/Lec10_01_05_12_ger.pdf
-		for (i = 0; i < steps; i++) {
-			
+		// we could actually calculate again a delta_j instead of the whole j
+		// but I'll work on the other exercises first
+		for (i = 1; i < steps; i++) {
+			j += 2 * (1 + i % 2) * fun(start + i * stepwidth);
 		}
-		
-		
-		
-	} while (fabs(1 - j/j_old) < precision);
-	
-	j = 
-	
-	for (i = 0; i < steps; i++) {
-
-	}
-	
+	} while (fabs(1 - 2 * j_old / j) > precision);	
 	
 	// finally calculate the value of the integral
-	return intervallength/steps * j;
+	return stepwidth/3 * j;
 }
 
 int main() {
