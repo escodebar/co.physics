@@ -25,7 +25,7 @@ int main() {
 	float ewx, ewxx, varx;
 	
 	// the real expectation values and variance of a dice
-	float ewxr, ewxxr, varxr;
+	float ewxr = 0, ewxxr = 0, varxr = 0;
 	
 	// the loop to calculate the expectation values
 	for (i = 1; i < 7; i++) {
@@ -34,6 +34,8 @@ int main() {
 	}
 	
 	varxr = sqrt(ewxxr - ewxr * ewxr);
+	
+	printf("Theoretical values: \nexpect. value: %f,  variation: %f \n\n", ewxr, varxr);
 	
 	// the loop for the variable a
 	for (i = 0; i < 3; i++) {
@@ -79,7 +81,7 @@ int main() {
 			// calculate the variation
 			varx = sqrt(ewxx - ewx*ewx);
 			
-			printf("expect. value: %f,  variantion: %f  \n", ewx, varx);			
+			printf("expect. value: %f,  variation: %f  \n", ewx, varx);			
 		}
 	}
 	
