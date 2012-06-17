@@ -21,47 +21,52 @@ int snakes_and_ladders(int x) {
 	
 	// now let's see on what field you landed and what field is the next
 	switch(x) {
-		case 1: next = 38;								// +37				*38
+		case 1: next = 38;
 	   	break;
 	
-		case 9: next = 31;								// +22				*31/9
+		case 4: next = 14;
 		break;
 		
-		// unified the two fields
-		case 4: 
-		case 17: next = x + (int)pow(-1, x % 4) * 10;
+		case 9: next = 31;
 		break;
 		
-		case 21: next = 42;								+21				*2
+		case 17: next = 7;
 		break;
 		
-		case 28: next = 84;								+56				*3
-		break;
-		
-		case 51: next = 67;								+16				*67/51
+		case 21: next = 42;
+		break;             
+		                   
+		case 28: next = 84;
+		break;             
+		                   
+		case 51: next = 67;
+		break;             
+                           
+		case 54: next = 34;
 		break;
 
-		case 62: next = 19;								-43				*19/62
+		case 62: next = 19;
+		break;             
+		                   
+		case 64: next = 60;
 		break;
 		
-		case 64: next = 60;								- 4				*15/16
+		case 71: next = 91;
 		break;
 		
-		// unified the two fields
-		case 71: 
-		case 80: next = x + 20;
+		case 80: next = 100;
 		break;
 		
-		case 87: next = 24;								-63
+		case 87: next = 24;
 		break;
 		
-		// unified the three fields
-		case 54:
-		case 93:
-		case 95: next = x - 20;
+		case 93: next = 73;
 		break;
 		
-		case 98: next = 79;								-19
+		case 95: next = 75;
+		break;
+		
+		case 98: next = 79;
 		break;
 		
 		default: next = x;
@@ -72,7 +77,38 @@ int snakes_and_ladders(int x) {
 
 int main() {
 	
-	printf("%i, %i", snakes_and_ladders(71), snakes_and_ladders(80));
+	// the counter, the field number, the variable a, the seed and the index i
+	int counter, field, a, seed, dice1, dice2;
+	
+	// let's try all "a" in {83, 85, 87}
+	for (a = 83; a <= 87; a += 2) {
+		
+		// let's play 100 times
+		for (seed = 1; seed <= 100; seed++) {
+			
+			// reset the counter to 0
+			counter = 0;
+			
+			// reset the field to 0
+			field = 0;
+			
+			// we'll have to set the value of dice2 to the value of the seed
+			dice2 = seed;
+			
+			do {
+				// let's generate two new random numbers
+				dice1 = rn_generator(dice2, a);
+				dice2 = rn_generator(dice1, a);
+				
+				field = snakes_and_ladders(field + (1 + (dice1 % 6)) + (1 + (dice2 % 6)));
+				
+				counter++;
+
+			} while (field != 100);
+			
+			printf("a: %i  seed: %i  counts: %i \n", a, seed, counter);
+		}
+	}
 	
 	return 1;
 }

@@ -13,7 +13,7 @@ int rn_generator(int x, int a) {
 int main() {
 	
 	// the indexes for the three different loops
-	int i,j,k;
+	int j,k;
 	
 	// our integer a (element of {81, 83, 85}), the random number x, the number of the dice xd
 	int a, x, xd;
@@ -28,7 +28,7 @@ int main() {
 	float ewxr = 0, ewxxr = 0, varxr = 0;
 	
 	// the loop to calculate the expectation values
-	for (i = 1; i < 7; i++) {
+	for (j = 1; j <= 6; i++) {
 		ewxr += (float)i / (float)6;
 		ewxxr += (float)i * (float)i / (float)6;
 	}
@@ -38,10 +38,7 @@ int main() {
 	printf("Theoretical values: \nexpect. value: %f,  variation: %f \n\n", ewxr, varxr);
 	
 	// the loop for the variable a
-	for (i = 0; i < 3; i++) {
-		
-		// our variable a
-		a = 83 + 2*i;
+	for (a = 83; a <= 87; a += 2) {
 		
 		// the loop for the seed
 		for (j = 1; j < 8191; j++) {
