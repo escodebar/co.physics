@@ -12,54 +12,74 @@ int rn_generator(int x, int a) {
 
 int main() {
 	
-	// the index for the loop
-	int i;
+	// the indexes for the three different loops
+	int j,k;
 	
-	// our integer a (element of {81, 83, 85}), the random number x
-	int a, x;
+	// our integer a (element of {81, 83, 85}), the random number x, the number of the dice xd
+	int a, x, xd;
 	
-	// the counter used to find out what seed and variable a are the best
-	int counter;
+	// our integer histogram
+	int histogram[6] = {0,0,0,0,0,0};
 	
-	// the maximum counter
-	int max_counter = 0, max_a, max_x;
+	// expectation value x, expectation value x^2, variance
+	float ewx, ewxx, varx;
+	
+	// the real expectation values and variance of a dice
+	float ewxr = 0, ewxxr = 0, varxr = 0;
+	
+	// the loop to calculate the expectation values
+	for (j = 1; j <= 6; j++) {
+		ewxr += (float)j / (float)6;
+		ewxxr += (float)j * (float)j / (float)6;
+	}
+	
+	varxr = sqrt(ewxxr - ewxr * ewxr);
+	
+	printf("Theoretical values: \nexpect. value: %f,  variation: %f \n\n", ewxr, varxr);
 	
 	// the loop for the variable a
 	for (a = 83; a <= 87; a += 2) {
 		
 		// the loop for the seed
-		for (i = 1; i < 8191; i++) {
-			
-			// reset the counter
-			counter = 0;
+		for (j = 1; j < 8191; j++) {
 			
 			// set our seed
-			x = i;
+			x = j;
 			
-			// let's find out what the periodicity of our random number generator is
-			do {
+			// the loop for the 3k numbers
+			for (k = 0; k < 3000; k++) {
+				
+				// calculate the next random number
 				x = rn_generator(x,a);
-				counter++;
-			} while (x != i);
-			
-			// if the counter is bigger than max_counter store the new maximal data
-			if (counter > max_counter) {
-				max_a = a;
-				max_x = i;
-				max_counter = counter;
+				
+				// calculate the number of the dice
+				xd = 1 + (x % 6);
+				
+				histogram[xd-1]++;
 			}
 			
-			// TODO
-			// - put this inside a textfile for later evaluation
-			printf("Periodicity: %i (a = %i, x = %i) \n", counter, a, i);
+			// reset the expectation values and the variation
+			ewx = 0;
+			ewxx = 0;
+			varx = 0;
+			
+			// calculate the expectation value and the variation
+			for (k = 0; k < 6; k++) {
+				
+				ewx += (float)(k+1) * (float)histogram[k]/(float)3000;
+				ewxx += (float)(k+1) * (float)(k+1) * (float)histogram[k]/(float)3000;
+				
+				// reset the histogram
+				histogram[k] = 0;
+			}
+			
+			// calculate the variation
+			varx = sqrt(ewxx - ewx*ewx);
+			
+			printf("Results for a=%i, x_initial=%i: ", a, j);			
+			printf("expect. value: %f,  variation: %f  \n", ewx, varx);			
 		}
 	}
-
-	// evaluation
-	printf("\n\nThe best sequence whas found with the following parameters:\n");
-	printf("Seed     (x): %i\n", max_x);
-	printf("Variable (a): %i\n", max_a);
-	printf("Periodicity:  %i\n", max_counter);
-	
+		
 	return 1;
 }
