@@ -10,6 +10,12 @@ int rn_generator(int x, int a) {
 	return y;
 }
 
+// returns the number on a dice for a given random number
+int dice(int x) {
+	return 1 + (x % 6);
+}
+
+// this function returns the new field
 int snakes_and_ladders(int x) {
 	
 	int next;
@@ -77,37 +83,36 @@ int snakes_and_ladders(int x) {
 
 int main() {
 	
-	// the counter, the field number, the variable a, the seed and the index i
-	int counter, field, a, seed, dice1, dice2;
+	// the counter, the field number, the variable a and the index i
+	int counter, field, a, dice1, dice2, i;	
 	
-	// let's try all "a" in {83, 85, 87}
-	for (a = 83; a <= 87; a += 2) {
+	// set the variable a (periodicity = 8190)
+	a = 85;
+	
+	// let's play 100 times
+	for (i = 0; i < 100; i++) {
 		
-		// let's play 100 times
-		for (seed = 1; seed <= 100; seed++) {
+		// reset the counter to 0
+		counter = 0;
+		
+		// reset the field to 0
+		field = 0;
+		
+		// we'll have to set the value of dice2 to the number of a seed
+		dice2 = (i + 1);
+		
+		do {
+			// let's generate two new random numbers
+			dice1 = rn_generator(dice2, a);
+			dice2 = rn_generator(dice1, a);
 			
-			// reset the counter to 0
-			counter = 0;
+			field = snakes_and_ladders(field + dice(dice1) + dice(dice2));
 			
-			// reset the field to 0
-			field = 0;
-			
-			// we'll have to set the value of dice2 to the value of the seed
-			dice2 = seed;
-			
-			do {
-				// let's generate two new random numbers
-				dice1 = rn_generator(dice2, a);
-				dice2 = rn_generator(dice1, a);
-				
-				field = snakes_and_ladders(field + (1 + (dice1 % 6)) + (1 + (dice2 % 6)));
-				
-				counter++;
+			counter++;
 
-			} while (field != 100);
-			
-			printf("a: %i  seed: %i  counts: %i \n", a, seed, counter);
-		}
+		} while (field != 100);
+		
+		printf("a: %i  seed: %i  counts: %i \n", a, (i + 1), counter);
 	}
 	
 	return 1;

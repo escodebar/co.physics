@@ -28,9 +28,9 @@ int main() {
 	float ewxr = 0, ewxxr = 0, varxr = 0;
 	
 	// the loop to calculate the expectation values
-	for (j = 1; j <= 6; i++) {
-		ewxr += (float)i / (float)6;
-		ewxxr += (float)i * (float)i / (float)6;
+	for (j = 1; j <= 6; j++) {
+		ewxr += (float)j / (float)6;
+		ewxxr += (float)j * (float)j / (float)6;
 	}
 	
 	varxr = sqrt(ewxxr - ewxr * ewxr);
@@ -65,7 +65,7 @@ int main() {
 			ewxx = 0;
 			varx = 0;
 			
-			// print out the histogram and reset it
+			// calculate the expectation value and the variation
 			for (k = 0; k < 6; k++) {
 				
 				ewx += (float)(k+1) * (float)histogram[k]/(float)3000;
@@ -81,6 +81,6 @@ int main() {
 			printf("expect. value: %f,  variation: %f  \n", ewx, varx);			
 		}
 	}
-	
+		
 	return 1;
 }
