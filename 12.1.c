@@ -58,8 +58,6 @@ int main() {
 				histogram[xd-1]++;
 			}
 			
-			printf("Results for a=%i, x_initial=%i: \n", a, j);
-			
 			// reset the expectation values and the variation
 			ewx = 0;
 			ewxx = 0;
@@ -78,6 +76,7 @@ int main() {
 			// calculate the variation
 			varx = sqrt(ewxx - ewx*ewx);
 			
+			printf("Results for a=%i, x_initial=%i: ", a, j);			
 			printf("expect. value: %f,  variation: %f  \n", ewx, varx);			
 		}
 	}
