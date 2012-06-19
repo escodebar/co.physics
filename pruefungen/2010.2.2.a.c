@@ -21,10 +21,10 @@ int diff_runge_kutta(double (*diffeq_y)(double x, double y, double z), double (*
 	double y_old, z_old;
 	
 	// the integer for the loop and the step
-	int i, steps = 1;
+	int i, steps = 10;
 	
 	// calculate the stepsize
-	double stepsize = fabs(end - start);
+	double stepsize = fabs(end - start)/(double)steps;
 	
 	// let's set the values of y and z to something meaningless
 	y = 0;
@@ -49,8 +49,8 @@ int diff_runge_kutta(double (*diffeq_y)(double x, double y, double z), double (*
 		}
 		
 		// now that we know the amount of steps, we can allocate the memory for our values
-		ys = (double*)calloc(steps + 1, sizeof(double));
-		zs = (double*)calloc(steps + 1, sizeof(double));
+		ys = (double*)calloc(11, sizeof(double));
+		zs = (double*)calloc(11, sizeof(double));
 		
 		// we have to store the starting values
 		ys[0] = y0;
@@ -73,9 +73,11 @@ int diff_runge_kutta(double (*diffeq_y)(double x, double y, double z), double (*
 			// increase the x
 			x += stepsize;
 			
-			// store the values
-			ys[i+1] = y;
-			zs[i+1] = z;
+			// we only need to store the values for 0.0, 0.1, 0.2, etc.
+			if (!((int)x*100 % 10)) {
+				ys[(int)(x*10)+1] = y;
+				zs[(int)(x*10)+1] = z;
+			}
 		}
 		
 		// adapt stepsize and amount of steps
@@ -87,14 +89,13 @@ int diff_runge_kutta(double (*diffeq_y)(double x, double y, double z), double (*
 	} while ((fabs(y - y_old) > precision) || (fabs(z - z_old) > precision));
 	
 	// let's print out the result
-	for (i = 0; i < steps + 1; i++) {
-		
-		// let's calculate the x
-		x = i * stepsize + start;
-		
+	for (i = 0; i < 11; i++) {
 		// print out the values
-		printf("y(%-1.5g) = %g  z(%-3g) = %g\n", x, ys[i], x, zs[i]);
+		printf("y(%-3g) = %g  z(%-3g) = %g\n", i*0.1, ys[i], i*0.1, zs[i]);
 	}
+	
+	// print out the stepsize
+	printf("stepsize: %g", stepsize*2);
 	
 	return 1;
 }

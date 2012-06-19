@@ -20,7 +20,7 @@ int diff_runge_kutta(double (*dy)(double x, double y, double z), double (*dz)(do
 	double *ys[] = { NULL, NULL }, *zs[] = { NULL, NULL };
 	
 	// the integer for the loop and the step
-	int i, steps = 1;
+	int i, steps = 10;
 	
 	// we only have to store two series of values, so we need an int
 	// ooz stands for "one or zero"
@@ -30,7 +30,7 @@ int diff_runge_kutta(double (*dy)(double x, double y, double z), double (*dz)(do
 	int ooz, condition;
 	
 	// calculate the stepsize
-	double stepsize = fabs(end - start);
+	double stepsize = fabs(end - start)/(double)steps;
 	
 	// let's set the values of y and z to something meaningless
 	y = 0;
@@ -38,8 +38,8 @@ int diff_runge_kutta(double (*dy)(double x, double y, double z), double (*dz)(do
 	
 	do {
 		// calculate if we have to store the values in the 0th or the 1st array
-		ooz = (int)log2(steps) % 2;
-		
+		ooz = (int)log2(steps/(double)10) % 2;
+				
 		// reset the start and the values at the start
 		x = start;
 		y = y0;
@@ -54,8 +54,8 @@ int diff_runge_kutta(double (*dy)(double x, double y, double z), double (*dz)(do
 		}
 		
 		// now that we know the amount of steps, we can allocate the memory for our values
-		ys[ooz] = (double*)calloc(steps + 1, sizeof(double));
-		zs[ooz] = (double*)calloc(steps + 1, sizeof(double));
+		ys[ooz] = (double*)calloc(11, sizeof(double));
+		zs[ooz] = (double*)calloc(11, sizeof(double));
 		
 		// we have to store the starting values
 		ys[ooz][0] = y0;
@@ -78,15 +78,17 @@ int diff_runge_kutta(double (*dy)(double x, double y, double z), double (*dz)(do
 			// increase the x
 			x += stepsize;
 			
-			// store the values
-			ys[ooz][i+1] = y;
-			zs[ooz][i+1] = z;
+			// we only need to store the values for 0.0, 0.1, 0.2, etc.
+			if (!((int)(x*100) % 10)) {
+				ys[ooz][(int)(x*10)+1] = y;
+				zs[ooz][(int)(x*10)+1] = z;
+			}
 		}
 		
 		// if it's the first time the loop runs, we won't have to check the conditions
 		// (because there will be no values to compare), instead we set the condition to "true"
-		if (steps == 1) {
-
+		if (steps == 10) {
+	
 			// we have to set the condition to 1
 			condition = 1;
 			
@@ -94,11 +96,11 @@ int diff_runge_kutta(double (*dy)(double x, double y, double z), double (*dz)(do
 			
 			// reset the condition
 			condition = 0;
-
+	
 			// now let's check if the conditions are fulfilled
-			for (i = 0; i < (steps / 2) + 1; i++) {
-				condition = condition || (fabs(ys[ooz][2*i] - ys[(ooz + 1) % 2][i]) > precision);
-				condition = condition || (fabs(zs[ooz][2*i] - zs[(ooz + 1) % 2][i]) > precision);
+			for (i = 0; i < 11; i++) {
+				condition = condition || (fabs(ys[ooz][i] - ys[(ooz + 1) % 2][i]) > precision);
+				condition = condition || (fabs(zs[ooz][i] - zs[(ooz + 1) % 2][i]) > precision);
 			}
 		}
 		
@@ -109,10 +111,10 @@ int diff_runge_kutta(double (*dy)(double x, double y, double z), double (*dz)(do
 	} while (condition);
 	
 	// let's print out the result
-	for (i = 0; i < steps + 1; i++) {
+	for (i = 0; i < 11; i++) {
 		
 		// let's calculate the x
-		x = i * stepsize + start;
+		x = i*0.1 + start;
 		
 		// print out the values
 		printf("y(%-3g) = %g  z(%-3g) = %g\n", x, ys[ooz][i], x, zs[ooz][i]);
