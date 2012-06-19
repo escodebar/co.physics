@@ -49,6 +49,10 @@ int diff_runge_kutta(double (*diffeq_y)(double x, double y, double z), double (*
 		}
 		
 		// now that we know the amount of steps, we can allocate the memory for our values
+		// actually, we don't need calloc here, we could just create an array of length 11
+		// but we might want to improve the code and save more steps then we'd only have
+		// to let the number "11" vary in dependence of the amount of steps
+		
 		ys = (double*)calloc(11, sizeof(double));
 		zs = (double*)calloc(11, sizeof(double));
 		
