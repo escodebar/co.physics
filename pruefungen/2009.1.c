@@ -51,7 +51,7 @@ double simpson_3_8_integration(double (*fun)(double), double precision, double s
 	} while (fabs((double) 3 / (double) 8 * (j_old * stepwidth_old - j * stepwidth)) > precision);	
 
 	// finally calculate the value of the integral
-	return stepwidth / (double) 3 * j;
+	return (double) 3 / (double) 8 * stepwidth * j;
 }
 	
 int main ()

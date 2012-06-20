@@ -1,15 +1,14 @@
 #include <math.h>
 #include <stdio.h>
 
-// the mathematical function
-double fun(double x) {
-	return exp(-x) - x;
-}
 
+double fun(double x, double p) {
+	return cos(x) - p * sqrt(x) * exp(-x);
+}
 
 // takes a function, an intervall, a precision,
 // and finds one root inside the given interval for the given precision
-int root_bisection(double (*f)(double), double start, double end, double precision, double *result) {
+int root_bisection(double (*f)(double, double), double p, double start, double end, double precision, double *result) {
 	
 	/* 
 		USE: You have to call root_bisection with the following parameters:
@@ -35,14 +34,14 @@ int root_bisection(double (*f)(double), double start, double end, double precisi
 
 	// the amount of steps (with formula N = log2((b-a)/e))
 	steps = ceil(log2((end-start)/precision));
-	
+		
 	// the center of the interval
 	double center;
 	
 	// the values at the start, the center and the end of the interval
 	double startval, centerval, endval;
-	startval = f(start);
-	endval = f(end);
+	startval = f(start, p);
+	endval = f(end, p);
 	
 	// let's check if we're able to find a root inside the interval
 	// (or if it's already at the start or the end)
@@ -56,7 +55,8 @@ int root_bisection(double (*f)(double), double start, double end, double precisi
 		
 		// the center and its value
 		center = (start + end) / 2;
-		centerval = f(center);
+		
+		centerval = f(center, p);
 		
 		// check if the value at the center is already 0
 		if (centerval == 0) {
@@ -82,7 +82,7 @@ int root_bisection(double (*f)(double), double start, double end, double precisi
 			}
 		}
 	}
-	
+		
 	*result = center;
 	
 	return 1;
@@ -91,14 +91,22 @@ int root_bisection(double (*f)(double), double start, double end, double precisi
 
 int main ()
 {
-	double res, start = 0, end = 1;
+	// the double the user has to give, the result
+	double p;
+	double result;
+	double start = 0;
+	double end = 2;
+	double precision = 1e-6;
 	
-	if (root_bisection(&fun, start, end, 10e-8, &res)) {
-		printf("A root was found at x = %f\n", res);
+	// we need an input from the user
+	printf("Put in the value for p: ");
+	scanf("%lg", &p);
+	
+	if (root_bisection(&fun, p, start, end, precision, &result)) {
+		printf("f(%lg) = %lg \n", result, fun(result, p));
 	} else {
-		printf("No root was found\n");
+		printf("No root was found inside the interval [%g,%g]\n", start, end);
 	}
-		
+	
 	return 0;
 }
-

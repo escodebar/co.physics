@@ -47,7 +47,7 @@ int main() {
 	
 	double result;
 	
-	result = monte_carlo(&fun, 8, -1, 1, 0, 0.5, 1e-6);
+	result = ar_monte_carlo(&fun, 8, -1, 1, 0, 0.5, 1e-6);
 	
 	printf("Value of the integral: %g\n", result);
 	
