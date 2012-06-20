@@ -3,51 +3,44 @@
 #include <stdlib.h>
 #include <time.h>
 
-int fun(double x, double y) {
-	return y <= exp(-x*x/(double)2) / sqrt((double)2 * M_PI);
+double fun(double x) {
+	return exp(- x * x / (double) 2) / sqrt((double) 2 * M_PI);
 }
 
-double monte_carlo(int (*f)(double, double), double variance, double x_start, double x_end, double y_start, double y_end, double precision) {
+double monte_carlo(double (*f)(double), double variance, double start, double end, double precision) {
 	
 	// the counter, the number of steps and the index i
-	unsigned int counter, steps, i;
+	long int steps, i;
 	
-	// our variables x and y and the area for the given limits
-	double x, y, area;
+	// our random x
+	double x, sum;
 	
 	// set the seed for the random number generator
 	srand(time(NULL));
 	
-	// set the counter to 0
-	counter = 0;
-	
 	// calculate the amount of steps
-	steps = (unsigned int)(variance/(precision * precision) + 1);
+	steps = (long int) (variance/(precision * precision) + 1);
 	
-	// set the amount of steps, set the counter and LOOP!
-	for (i = 0; i < steps; i++) {
+	printf("number of steps: %li", steps);
+	
+	// set the amount of steps and the sum, set the counter and LOOP!
+	for (i = 0, sum = 0; i < steps; i++) {
 		
 		// stretch it, bulge it and shift it
-		x = ((x_end - x_start) * (double) rand() / (double) RAND_MAX) + x_start;
-		y = ((y_end - y_start) * (double) rand() / (double) RAND_MAX) + y_start;
+		x = ((end - start) * (double) rand() / (double) RAND_MAX) + start;
 		
-		// check if the point is inside the area and increase the counter
-		if (f(x,y)) {
-			counter++;
-		}
+		// add the result of the function to the series
+		sum += f(x);
 	}
 	
-	// calculate the area of the given interval
-	area = (x_end - x_start) * (y_end - y_start);
-		
-	return area * (double)counter / (double)steps;
+	return (end - start) * sum / (double) steps;
 }
 
 int main() {
 	
 	double result;
 	
-	result = monte_carlo(&fun, 8, -1, 1, 0, 0.5, 1e-6);
+	result = monte_carlo(&fun, 8, -1, 1, 1e-6);
 	
 	printf("Value of the integral: %g\n", result);
 	
