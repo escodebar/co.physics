@@ -61,5 +61,5 @@ int main() {
 	printf("Variable (a): %i\n", max_a);
 	printf("Periodicity:  %i\n", max_counter);
 	
-	return 1;
+	return 0;
 }

@@ -42,5 +42,5 @@ int main() {
 	printf("The error of the integral is: %g\n", fabs(0.68268949 - result));
 	printf("The theoretical error is: %g\n", (double) 8 / sqrt(steps - 1));
 	
-	return 1;
+	return 0;
 }

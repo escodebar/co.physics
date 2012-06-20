@@ -1,64 +1,66 @@
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-double fun(double x) {
-	return 1/sqrt(2.0*M_PI) * exp(-x*x/2.0);
+double function(double x) {
+	return log(1 + x*x) * sqrt(cos(x));
 }
 
-double simpsons_integration(double (*fun)(double), double precision, double start, double end) {
+double simpson_3_8_integration(double (*fun)(double), double precision, double start, double end) {
 	
 	// the index for the for loop, the amount of steps
 	int i, steps;
-	
+
 	// the stepwidth, the length of the interval, the value of the integral, the value of the old integral
-	double stepwidth, intervallength, j0, j, j_old;
-	
+	double stepwidth, intervallength, j0, j, j_old, stepwidth_old;
+
 	// the length of the interval is 
 	intervallength = fabs(end - start);
-	
+
 	// the start and the end value of the integral
 	j0 = fun(start) + fun(end);
 	j = j0;
-	
+	stepwidth = intervallength / (double) steps;
+
 	// first we'll only calculate one step
 	steps = 1;
-	
+
 	do {
 		// we need to store the old value of the integral
 		j_old = j;
-		
+		stepwidth_old = stepwidth;
+
 		// and reset the value of the integral
 		j = j0;
-		
+
 		// increment the amount of steps for the next iteration
-		steps *= 2;
-		
+		steps *= 3;
+
 		// let's calculate the stepwidth
-		stepwidth = intervallength / steps;
-		
+		stepwidth = intervallength / (double) steps;
+
 		// now let's calculate the value of the integral for the given amount of steps
-		// we use the formula f_0 + 4f_1 + 2f_2 + 4f_3 + ... + 2f_(2k-2) + 4f_(2k-1) + f_(2k)
+		// we use the formula f_0 + 3f_1 + 3f_2 + f_3 + ... + 3f_(3k-2) + 3f_(3k-1) + f_(3k)
 		// for more information visit:
-		// http://www.physik.unibe.ch/unibe/philnat/fachbphysik/content/e4897/e4910/e4913/e5244/e8465/files60510/Lec10_01_05_12_ger.pdf
+		// http://www.physik.unibe.ch/unibe/philnat/fachbphysik/content/e4897/e4910/e4913/e5244/e7137/files7138/Exam2009_ger.pdf
 		// we could actually calculate again a delta_j instead of the whole j
 		for (i = 1; i < steps; i++) {
-			j += 2 * (1 + i % 2) * fun(start + i * stepwidth);
+			j += (double) (1 + 2 * (i % 3 != 0)) * fun(start + i * stepwidth);
 		}
-	} while (fabs(1 - 2 * j_old / j) > precision);	
-	
-	// finally calculate the value of the integral
-	return stepwidth/3 * j;
-}
+		
+	} while (fabs((double) 3 / (double) 8 * (j_old * stepwidth_old - j * stepwidth)) > precision);	
 
-int main() {
+	// finally calculate the value of the integral
+	return stepwidth / (double) 3 * j;
+}
 	
+int main ()
+{
 	double result;
 	
-	int i;
-	for (i = 1; i <= 5; i++) {
-		result = simpsons_integration(&fun, 10e-7, -i, i);
-		printf("%1.8g\n", result);		
-	}
+	result = simpson_3_8_integration(&function, 1e-2, -1, 1);
+	
+	printf("The result of the integral is: %g\n", result);
 	
 	return 0;
 }

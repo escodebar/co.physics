@@ -51,5 +51,5 @@ int main() {
 	
 	printf("Value of the integral: %g\n", result);
 	
-	return 1;
+	return 0;
 }

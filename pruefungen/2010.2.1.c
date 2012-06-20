@@ -57,5 +57,5 @@ int main() {
 	
 	result = diff_runge_kutta(&diffeq_y, &diffeq_z, y0, z0, start, end, 0.1);
 	
-	return 1;
+	return 0;
 }

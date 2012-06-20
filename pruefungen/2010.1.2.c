@@ -74,5 +74,5 @@ int main() {
 	printf("The found radius is: %g\n", r);
 	printf("The area is: %g +/- %g", result, sqrt(result / 1e6));
 	
-	return 1;
+	return 0;
 }

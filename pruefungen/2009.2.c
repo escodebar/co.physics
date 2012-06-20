@@ -118,6 +118,6 @@ int main() {
 	printf("The minimum amount of packs bought was: %i\n", min_counter);
 	printf("The maximum amount of packs bought was: %i\n", max_counter);
 	
-	return 1;
+	return 0;
 
 }

@@ -66,5 +66,5 @@ int main() {
 		printf("%1.8g\n", result);		
 	}
 	
-	return 1;
+	return 0;
 }

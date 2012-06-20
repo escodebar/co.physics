@@ -41,5 +41,5 @@ int main() {
 	
 	result = diff_runge_kutta(&diffeq, 1, 0, 1, 0.01);
 	
-	return 1;
+	return 0;
 }

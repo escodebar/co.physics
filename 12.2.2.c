@@ -138,5 +138,5 @@ int main() {
 	printf("Maximum number of throws: %i \n", max_counter);
 	printf("Minimum number of throws: %i \n", min_counter);
 	
-	return 1;
+	return 0;
 }
