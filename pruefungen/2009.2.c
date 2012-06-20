@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <limits.h>
 
 // this function returns an array of the width nr_stickers with a few stickers within the given range
 int* buy_pack(int nr_stickers, int range) {
@@ -15,33 +16,32 @@ int* buy_pack(int nr_stickers, int range) {
 	// we need the number of the generated sticker
 	int sticker;
 	
-	// now let's get some stickers (randomly)
+	// let's create our 5 stickers
 	for (i = 0; i < nr_stickers; i++) {
 		
 		do {
 			// generate a random sticker
 			sticker = range * (double) rand() / (double) RAND_MAX;
-
-			// let's check if the sticker is already in the pack
-			// TODO
-			for (j = 0; (j < i+1) && (sticker != pack[j]); j++) {}
 			
-			printf("Pack[%i] = %i\n", i, sticker);
+			// check if the sticker is already in the pack
+			for (j = 0; (j < i) && (pack[j] != sticker); j++) {}
 			
-		} while (j!=i);
+			// // if it's not in the pack, add it to the pack
+			// if (j == i) {
+			// 	pack[i] = sticker;
+			// }
+			
+		} while (j != i);
 		
-		// the sticker is new, let's add it to the pack
 		pack[i] = sticker;
 	}
-	
+		
 	return pack;
 }
 
-int main() {
-	
-	// the range of the stickers
-	int range = 200;
-	int stickers_per_pack = 5;
+// this function buys as many packages as needed 'til the album is full
+// it returns the amount of packages bought
+int fill_album(int range, int stickers_per_pack) {
 	
 	// our album
 	int *album = (int*) calloc(range, sizeof(int));
@@ -69,7 +69,7 @@ int main() {
 		// our album will be thick as hell, but it'll be
 		// a priceless joy once it's finished!
 		for (i = 0; i < stickers_per_pack; i++) {
-			album[pack[i]] = 1;
+			album[pack[i]] = 1;			
 		}
 		
 		// we spent another 5 CHF! awesome!
@@ -82,9 +82,42 @@ int main() {
 			total += album[i];
 		}
 		
-	} while ((total < range) && counter < 10);
+	} while ((total < range));
 	
-	printf("Mister! You bought %d packs!", counter);
+	// let's free the memory
+	free(album);
+	
+	return counter;
+}
+
+int main() {
+	
+	// the integer for the loop
+	int i; int loops = 1e4;
+	
+	// the counter of packs
+	// the total amount of stickers packs bought
+	// the maximum number of packs bought
+	// the minimum number of packs bought
+	int counter = 0, total_counter = 0, max_counter = INT_MIN, min_counter = INT_MAX;
+	
+	// initialize the seed
+	srand(time(NULL));
+	
+	for (i = 0; i < loops; i++) {
+		counter = fill_album(200, 5);
+		
+		total_counter += counter;
+		
+		min_counter = counter < min_counter? counter: min_counter;
+		max_counter = counter > max_counter? counter: max_counter;
+		
+	}
+	
+	printf("You bought in average %f packs\n", (float) total_counter / (float) loops);
+	printf("The minimum amount of packs bought was: %i\n", min_counter);
+	printf("The maximum amount of packs bought was: %i\n", max_counter);
 	
 	return 1;
+
 }
