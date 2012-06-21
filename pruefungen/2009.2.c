@@ -25,12 +25,7 @@ int* buy_pack(int nr_stickers, int range) {
 			
 			// check if the sticker is already in the pack
 			for (j = 0; (j < i) && (pack[j] != sticker); j++) {}
-			
-			// // if it's not in the pack, add it to the pack
-			// if (j == i) {
-			// 	pack[i] = sticker;
-			// }
-			
+						
 		} while (j != i);
 		
 		pack[i] = sticker;

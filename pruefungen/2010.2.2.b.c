@@ -107,14 +107,14 @@ int diff_runge_kutta(double (*dy)(double x, double y, double z), double (*dz)(do
 		// adapt stepsize and amount of steps
 		stepsize /= 2;
 		steps *= 2;
-		
+	
 	} while (condition);
 	
 	// let's print out the result
 	for (i = 0; i < 11; i++) {
 		
 		// let's calculate the x
-		x = i*0.1 + start;
+		x = i * 0.1 + start;
 		
 		// print out the values
 		printf("y(%-3g) = %g  z(%-3g) = %g\n", x, ys[ooz][i], x, zs[ooz][i]);
